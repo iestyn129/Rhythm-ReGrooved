@@ -1,9 +1,12 @@
-#include "cstdio"
 #include "hk/hook/Trampoline.h"
 #include "hk/svc/api.h"
+#include "lua.h"
+
 
 // Runs on startup
 HkTrampoline<void, u64*> initHook = hk::hook::trampoline([](u64* a1) -> void {
+    runScript(R"(print("hello from lua"))");
+
     initHook.orig(a1);
 });
 
@@ -28,6 +31,8 @@ HkTrampoline<void*, char*, u32*, u32, s32, s32, char, char> loadFileHook = hk::h
 
 
 extern "C" void hkMain() {
+    initLua();
+
     initHook.installAtMainOffset(0x50C9C0);
     mainLoopHook.installAtMainOffset(0x509e10);
     loadFileHook.installAtMainOffset(0x4E3990);
