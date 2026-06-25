@@ -1,9 +1,12 @@
 #pragma once
 
-#include "game.h"
-
 extern s64 gChartHandler;
 extern s64 gScene;
 
+extern s64 runLuaChart(const char* scriptName);
+
 extern void chartRest(s32 length);
 extern void chartSpawnCue(s32 cueIdx);
+extern void chartSpawnCue2(u32 type, u32 duration, s32 cueIdx, char a3);
+extern void chartSpawnCue3(s32 cueIdx);
+extern void chartSpawnCue4(u32 a1, u32 a2, u32 a3, u32 a4);

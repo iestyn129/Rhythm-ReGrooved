@@ -2,3 +2,7 @@
 
 _ZN2nn2fs10CreateFileEPKcl
 _ZN2nn2fs11MountSdCardEPKc
+_ZN2nn2fs8OpenFileEPNS0_10FileHandleEPKci
+_ZN2nn2fs11GetFileSizeEPlNS0_10FileHandleE
+_ZN2nn2fs9CloseFileENS0_10FileHandleE
+_ZN2nn2fs8ReadFileEPmNS0_10FileHandleElPvm

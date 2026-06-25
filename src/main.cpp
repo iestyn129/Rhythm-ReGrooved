@@ -33,9 +33,7 @@ HkTrampoline<void*, char*, u32*, u32, s32, s32, char, char> loadFileHook = hk::h
 });
 
 
-HkTrampoline<void*, void*, char*> setAnimHook = hk::hook::trampoline([](
-    void* a1, char* a2
-) -> void* {
+HkTrampoline<void*, void*, char*> setAnimHook = hk::hook::trampoline([](void* a1, char* a2) -> void* {
 
     char msg[1024];
     sprintf(msg, "%p - %s", a1, a2);
@@ -75,41 +73,35 @@ HkTrampoline sceneHook = [](TrampolineStatic(), s32 a1, s64 a2, u32 a3, u32 a4, 
 };
 
 
-HkTrampoline cueHook = [](TrampolineStatic(), s64 a1, s64 a2) -> s64 {
+HkTrampoline trundlingCueHook = [](TrampolineStatic(), s64 a1, s64 a2) -> s64 {
     gChartHandler = a1;
     gScene = a2;
 
-    char basic[6] = "basic";
-    sub_7100138A90(a1, basic);
+    return runLuaChart("trundling");
+};
 
-    runScript(R"(rest(480))");
-    runScript(R"(spawn_cue(-1))");
-    runScript(R"(rest(480))");
-    runScript(R"(spawn_cue(-1))");
-    runScript(R"(rest(480))");
-    runScript(R"(spawn_cue(-1))");
-    runScript(R"(rest(480))");
-    runScript(R"(spawn_cue(-1))");
-    runScript(R"(rest(480))");
-    runScript(R"(spawn_cue(-1))");
-    runScript(R"(rest(480))");
-    runScript(R"(spawn_cue(-1))");
-    runScript(R"(rest(480))");
-    runScript(R"(spawn_cue(-1))");
-    runScript(R"(rest(480))");
-    runScript(R"(spawn_cue(-1))");
-    runScript(R"(rest(480))");
-    runScript(R"(spawn_cue(-1))");
-    runScript(R"(rest(480))");
-    runScript(R"(spawn_cue(-1))");
-    runScript(R"(rest(480))");
-    runScript(R"(spawn_cue(-1))");
-    runScript(R"(rest(480))");
-    runScript(R"(spawn_cue(-1))");
-    runScript(R"(rest(480))");
-    runScript(R"(spawn_cue(-1))");
 
-    return sub_7100514DF0(a2);
+HkTrampoline discDogCueHook = [](TrampolineStatic(), s64 a1, s64 a2) -> s64 {
+    gChartHandler = a1;
+    gScene = a2;
+
+    return runLuaChart("discdog");
+};
+
+
+HkTrampoline beastCueHook = [](TrampolineStatic(), s64 a1, s64 a2) -> s64 {
+    gChartHandler = a1;
+    gScene = a2;
+
+    return runLuaChart("beast");
+};
+
+
+HkTrampoline brollyCueHook = [](TrampolineStatic(), s64 a1, s64 a2) -> s64 {
+    gChartHandler = a1;
+    gScene = a2;
+
+    return runLuaChart("brolly");
 };
 
 
@@ -122,5 +114,8 @@ extern "C" void hkMain() {
     //setAnimHook.installAtMainOffset(0x4F80D0);
     //restHook.installAtMainOffset(0x514B90);
     //sceneHook.installAtMainOffset(0x488800);
-    cueHook.installAtMainOffset(0x42C900);
+    trundlingCueHook.installAtMainOffset(0x42C900);
+    discDogCueHook.installAtMainOffset(0x329B70);
+    beastCueHook.installAtMainOffset(0x34FDE0);
+    brollyCueHook.installAtMainOffset(0x38FE40);
 }
