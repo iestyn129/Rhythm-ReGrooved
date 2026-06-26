@@ -1,7 +1,8 @@
 #include "lua.h"
-#include "chart.h"
 #include "hk/svc/api.h"
 #include "nn/fs.h"
+#include "chart.h"
+#include "log.h"
 
 lua_State* gLua = nullptr;
 
@@ -25,6 +26,8 @@ void initLua() {
     lua_setglobal(gLua, "spawn_cue3");
     lua_pushcfunction(gLua, lua_spawn_cue4);
     lua_setglobal(gLua, "spawn_cue4");
+    
+    log("Lua initialised");
 }
 
 
@@ -58,14 +61,10 @@ void runLuaScript(const char* scriptPath) {
 
 s32 lua_print(lua_State* L) {
     const int argc = lua_gettop(L);
-    char buf[1024];
 
     for (int i = 1; i <= argc; i++) {
-        const char* str = lua_tostring(L, i);
-
-        if (str != nullptr) {
-            sprintf(buf, "%s", str);
-            hk::svc::OutputDebugString(buf, 1024);
+        if (const char* str = lua_tostring(L, i); str != nullptr) {
+            log("LUA: %s", str);
         }
     }
 

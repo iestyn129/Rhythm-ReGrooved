@@ -1,6 +1,7 @@
-#include "nn/fs.h"
 #include "chart.h"
+#include "cstring"
 #include "game.h"
+#include "log.h"
 #include "lua.h"
 
 s64 gChartHandler = 0;
@@ -8,10 +9,10 @@ s64 gScene = 0;
 
 
 s64 runLuaChart(const char* scriptName) {
-    char scriptPath[1024];
+    log("Running chart: %s", scriptName);
 
-    sprintf(scriptPath, "sd://groove//%s.lua", scriptName);
-
+    char scriptPath[strlen(scriptName) + 32];
+    sprintf(scriptPath, "sdmc://groove//%s.lua", scriptName);
     runLuaScript(scriptPath);
 
     return sub_7100514DF0(gScene);

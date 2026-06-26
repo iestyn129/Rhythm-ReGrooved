@@ -1,15 +1,16 @@
 #include "hk/hook/Trampoline.h"
-#include "hk/svc/api.h"
-#include "nn/fs/fs_mount.h"
+#include "nn/fs.h"
 #include "arm_neon.h"
 #include "chart.h"
+#include "log.h"
 #include "lua.h"
+
 
 // Runs on startup
 HkTrampoline<void, u64*> initHook = hk::hook::trampoline([](u64* a1) -> void {
-    nn::fs::MountSdCard("sd");
-
-    runLua(R"(print("hello from lua"))");
+    nn::fs::MountSdCard("sdmc");
+    initLog();
+    initLua();
 
     initHook.orig(a1);
 });
@@ -26,19 +27,14 @@ HkTrampoline<void*, char*, u32*, u32, s32, s32, char, char> loadFileHook = hk::h
 ) -> void* {
     void* ret = loadFileHook.orig(a1, a2, a3, a4, a5, a6, a7);
 
-    char msg[1024];
-    sprintf(msg, "loaded file '%s' at %p. (a2: %p, a3: %d, a4: %d, a5: %d, a6: %d, read only?: %d)", a1, ret, a2, a3, a4, a5, a6, a7);
-    hk::svc::OutputDebugString(msg, 1024);
+    log("loaded file '%s' at %p. (a2: %p, a3: %d, a4: %d, a5: %d, a6: %d, read only?: %d)", a1, ret, a2, a3, a4, a5, a6, a7);
 
     return ret;
 });
 
 
 HkTrampoline<void*, void*, char*> setAnimHook = hk::hook::trampoline([](void* a1, char* a2) -> void* {
-
-    char msg[1024];
-    sprintf(msg, "%p - %s", a1, a2);
-    hk::svc::OutputDebugString(msg, 1024);
+    log("%p - %s", a1, a2);
 
     return setAnimHook.orig(a1, a2);;
 });
@@ -107,8 +103,6 @@ HkTrampoline brollyCueHook = [](TrampolineStatic(), s64 a1, s64 a2) -> s64 {
 
 
 extern "C" void hkMain() {
-    initLua();
-
     initHook.installAtMainOffset(0x50C9C0);
     mainLoopHook.installAtMainOffset(0x509e10);
     //loadFileHook.installAtMainOffset(0x4E3990);
