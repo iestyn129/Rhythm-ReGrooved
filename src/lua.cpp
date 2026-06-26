@@ -68,7 +68,6 @@ int lua_rest(lua_State* L) {
 }
 
 
-
 int lua_spawn_cue(lua_State* L) {
     const lua_Integer cueIdx = luaL_checkinteger(L, 1);
 
@@ -76,7 +75,6 @@ int lua_spawn_cue(lua_State* L) {
 
     return 0;
 }
-
 
 
 int lua_spawn_cue2(lua_State* L) {
@@ -91,7 +89,6 @@ int lua_spawn_cue2(lua_State* L) {
 }
 
 
-
 int lua_spawn_cue3(lua_State* L) {
     const lua_Integer cueIdx = luaL_checkinteger(L, 1);
 
@@ -101,14 +98,13 @@ int lua_spawn_cue3(lua_State* L) {
 }
 
 
-
 int lua_spawn_cue4(lua_State* L) {
-    const lua_Integer a1 = luaL_checkinteger(L, 1);
-    const lua_Integer a2 = luaL_checkinteger(L, 2);
+    const lua_Integer duration = luaL_checkinteger(L, 1);
+    const lua_Integer cueIdx = luaL_checkinteger(L, 2);
     const lua_Integer a3 = luaL_checkinteger(L, 3);
     const lua_Integer a4 = luaL_checkinteger(L, 4);
 
-    chartSpawnCue4(static_cast<u32>(a1), static_cast<u32>(a2), static_cast<u32>(a3), static_cast<u32>(a4));
+    chartSpawnCue4(static_cast<u32>(duration), static_cast<u32>(cueIdx), static_cast<u32>(a3), static_cast<u32>(a4));
 
     return 0;
 }

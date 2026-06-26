@@ -62,6 +62,6 @@ void chartSpawnCue3(s32 cueIdx) {
 }
 
 
-void chartSpawnCue4(u32 a1, u32 a2, u32 a3, u32 a4) {
-    cue4_sub_7100204620(gChartHandler + 11416, gScene, a1, a2, a3, a4);
+void chartSpawnCue4(u32 duration, u32 cueIdx, u32 a3, u32 a4) {
+    cue4_sub_7100204620(gChartHandler + 11416, gScene, duration, cueIdx, a3, a4);
 }
