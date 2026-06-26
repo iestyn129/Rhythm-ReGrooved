@@ -12,6 +12,8 @@ void initLua() {
     lua_pushcfunction(gLua, lua_print);
     lua_setglobal(gLua, "print");
 
+    lua_pushcfunction(gLua, lua_set_marking_criteria);
+    lua_setglobal(gLua, "set_marking_criteria");
     lua_pushcfunction(gLua, lua_rest);
     lua_setglobal(gLua, "rest");
     lua_pushcfunction(gLua, lua_spawn_cue);
@@ -43,6 +45,15 @@ int lua_print(lua_State* L) {
             hk::svc::OutputDebugString(buf, 1024);
         }
     }
+
+    return 0;
+}
+
+
+int lua_set_marking_criteria(lua_State* L) {
+    const char* criteria = luaL_checkstring(L, 1);
+
+    chartSetMarkingCriteria(const_cast<char*>(criteria));
 
     return 0;
 }

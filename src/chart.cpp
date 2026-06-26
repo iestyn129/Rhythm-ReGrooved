@@ -8,9 +8,6 @@ s64 gScene = 0;
 
 
 s64 runLuaChart(const char* scriptName) {
-    char basic[6] = "basic";
-    sub_7100138A90(gChartHandler, basic);
-
     char scriptPath[1024];
 
     sprintf(scriptPath, "sd://groove//%s.lua", scriptName);
@@ -40,8 +37,13 @@ s64 runLuaChart(const char* scriptName) {
 }
 
 
-void chartRest(s32 length) {
-    rest_sub_7100514B90(gScene, length);
+s64 chartSetMarkingCriteria(char* criteria) {
+    return sub_7100138A90(gChartHandler, criteria);
+}
+
+
+s64 chartRest(s32 length) {
+    return rest_sub_7100514B90(gScene, length);
 }
 
 
