@@ -1,14 +1,15 @@
 #include "hk/hook/Trampoline.h"
 #include "hk/svc/api.h"
+#include "nn/fs/fs_mount.h"
 #include "arm_neon.h"
 #include "chart.h"
-#include "game.h"
 #include "lua.h"
-
 
 // Runs on startup
 HkTrampoline<void, u64*> initHook = hk::hook::trampoline([](u64* a1) -> void {
-    runScript(R"(print("hello from lua"))");
+    nn::fs::MountSdCard("sd");
+
+    runLua(R"(print("hello from lua"))");
 
     initHook.orig(a1);
 });

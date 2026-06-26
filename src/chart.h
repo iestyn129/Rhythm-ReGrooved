@@ -1,5 +1,7 @@
 #pragma once
 
+#include "hk/prim/traits/Integer.h"
+
 extern s64 gChartHandler;
 extern s64 gScene;
 

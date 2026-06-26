@@ -12,26 +12,7 @@ s64 runLuaChart(const char* scriptName) {
 
     sprintf(scriptPath, "sd://groove//%s.lua", scriptName);
 
-    nn::fs::MountSdCard("sd");
-
-    nn::fs::FileHandle file{};
-    if (nn::fs::OpenFile(&file, scriptPath, nn::fs::OpenMode_Read).IsSuccess()) {
-        s64 fileSize = 0;
-        nn::fs::GetFileSize(&fileSize, file);
-
-        auto buffer = new char[fileSize + 1];
-
-        u64 bytesRead = 0;
-        nn::fs::ReadFile(&bytesRead, file, 0, buffer, fileSize);
-
-        buffer[fileSize] = '\0';
-
-        nn::fs::CloseFile(file);
-
-        runScript(buffer);
-
-        delete[] buffer;
-    }
+    runLuaScript(scriptPath);
 
     return sub_7100514DF0(gScene);
 }

@@ -1,6 +1,7 @@
-#include "hk/svc/api.h"
 #include "lua.h"
 #include "chart.h"
+#include "hk/svc/api.h"
+#include "nn/fs.h"
 
 lua_State* gLua = nullptr;
 
@@ -27,13 +28,35 @@ void initLua() {
 }
 
 
-void runScript(const char* script) {
+void runLua(const char* script) {
     luaL_loadbuffer(gLua, script, static_cast<int>(strlen(script)), "runScript");
     lua_pcall(gLua, 0, 0, 0);
 }
 
 
-int lua_print(lua_State* L) {
+void runLuaScript(const char* scriptPath) {
+    nn::fs::FileHandle file{};
+    if (nn::fs::OpenFile(&file, scriptPath, nn::fs::OpenMode_Read).IsSuccess()) {
+        s64 fileSize = 0;
+        nn::fs::GetFileSize(&fileSize, file);
+
+        const auto buffer = new char[fileSize + 1];
+
+        u64 bytesRead = 0;
+        nn::fs::ReadFile(&bytesRead, file, 0, buffer, fileSize);
+
+        buffer[fileSize] = '\0';
+
+        nn::fs::CloseFile(file);
+
+        runLua(buffer);
+
+        delete[] buffer;
+    }
+}
+
+
+s32 lua_print(lua_State* L) {
     const int argc = lua_gettop(L);
     char buf[1024];
 
@@ -50,7 +73,7 @@ int lua_print(lua_State* L) {
 }
 
 
-int lua_set_marking_criteria(lua_State* L) {
+s32 lua_set_marking_criteria(lua_State* L) {
     const char* criteria = luaL_checkstring(L, 1);
 
     chartSetMarkingCriteria(const_cast<char*>(criteria));
@@ -59,7 +82,7 @@ int lua_set_marking_criteria(lua_State* L) {
 }
 
 
-int lua_rest(lua_State* L) {
+s32 lua_rest(lua_State* L) {
     const lua_Integer ticks = luaL_checkinteger(L, 1);
 
     chartRest(static_cast<s32>(ticks));
@@ -68,7 +91,7 @@ int lua_rest(lua_State* L) {
 }
 
 
-int lua_spawn_cue(lua_State* L) {
+s32 lua_spawn_cue(lua_State* L) {
     const lua_Integer cueIdx = luaL_checkinteger(L, 1);
 
     chartSpawnCue(static_cast<s32>(cueIdx));
@@ -77,7 +100,7 @@ int lua_spawn_cue(lua_State* L) {
 }
 
 
-int lua_spawn_cue2(lua_State* L) {
+s32 lua_spawn_cue2(lua_State* L) {
     const lua_Integer type = luaL_checkinteger(L, 1);
     const lua_Integer duration = luaL_checkinteger(L, 2);
     const lua_Integer cueIdx = luaL_checkinteger(L, 3);
@@ -89,7 +112,7 @@ int lua_spawn_cue2(lua_State* L) {
 }
 
 
-int lua_spawn_cue3(lua_State* L) {
+s32 lua_spawn_cue3(lua_State* L) {
     const lua_Integer cueIdx = luaL_checkinteger(L, 1);
 
     chartSpawnCue3(static_cast<s32>(cueIdx));
@@ -98,7 +121,7 @@ int lua_spawn_cue3(lua_State* L) {
 }
 
 
-int lua_spawn_cue4(lua_State* L) {
+s32 lua_spawn_cue4(lua_State* L) {
     const lua_Integer duration = luaL_checkinteger(L, 1);
     const lua_Integer cueIdx = luaL_checkinteger(L, 2);
     const lua_Integer a3 = luaL_checkinteger(L, 3);
