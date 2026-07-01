@@ -2,6 +2,7 @@
 #include "nn/fs.h"
 #include "arm_neon.h"
 #include "chart.h"
+#include "game.h"
 #include "log.h"
 #include "lua.h"
 
@@ -46,7 +47,7 @@ HkTrampoline restHook = [](TrampolineStatic(), u32* a1, s64 a2) -> u32* {
 
 
 HkTrampoline sceneHook = [](TrampolineStatic(), s32 a1, s64 a2, u32 a3, u32 a4, u32 a5, u32 a6, u32 a7) -> int32x2_t {
-    switch (a1) {
+    /*switch (a1) {
     case 44:
         a1 = 43;
         break;
@@ -64,6 +65,10 @@ HkTrampoline sceneHook = [](TrampolineStatic(), s32 a1, s64 a2, u32 a3, u32 a4, 
         break;
     default:
         break;
+    }*/
+
+    if (a1 == 0) {
+        a1 = 3;
     }
 
     return orig(a1, a2, a3, a4, a5, a6, a7);
@@ -75,6 +80,24 @@ HkTrampoline trundlingCueHook = [](TrampolineStatic(), s64 a1, s64 a2) -> s64 {
     gScene = a2;
 
     return runLuaChart("trundling");
+};
+
+
+HkTrampoline brollyCueHook = [](TrampolineStatic(), s64 a1, s64 a2) -> s64 {
+    gChartHandler = a1;
+    gScene = a2;
+
+    return runLuaChart("brolly");
+};
+
+
+HkTrampoline brollyAnimHook = [](TrampolineStatic(), s64 a1, s64 a2) -> s64 {
+    return sub_7100514DF0(a2);
+};
+
+
+HkTrampoline brollyBGHook = [](TrampolineStatic(), s64 a1, s64 a2) -> s64 {
+    return sub_7100514DF0(a2);
 };
 
 
@@ -94,23 +117,20 @@ HkTrampoline beastCueHook = [](TrampolineStatic(), s64 a1, s64 a2) -> s64 {
 };
 
 
-HkTrampoline brollyCueHook = [](TrampolineStatic(), s64 a1, s64 a2) -> s64 {
-    gChartHandler = a1;
-    gScene = a2;
-
-    return runLuaChart("brolly");
-};
-
-
 extern "C" void hkMain() {
     initHook.installAtMainOffset(0x50C9C0);
     mainLoopHook.installAtMainOffset(0x509e10);
     //loadFileHook.installAtMainOffset(0x4E3990);
     //setAnimHook.installAtMainOffset(0x4F80D0);
     //restHook.installAtMainOffset(0x514B90);
-    //sceneHook.installAtMainOffset(0x488800);
+    sceneHook.installAtMainOffset(0x488800);
     trundlingCueHook.installAtMainOffset(0x42C900);
-    discDogCueHook.installAtMainOffset(0x329B70);
-    beastCueHook.installAtMainOffset(0x34FDE0);
+
     brollyCueHook.installAtMainOffset(0x38FE40);
+    brollyAnimHook.installAtMainOffset(0x391710);
+    brollyBGHook.installAtMainOffset(0x393270);
+
+    discDogCueHook.installAtMainOffset(0x329B70);
+
+    beastCueHook.installAtMainOffset(0x34FDE0);
 }
