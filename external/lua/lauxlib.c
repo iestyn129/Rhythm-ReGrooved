@@ -1154,7 +1154,7 @@ static unsigned int luai_makeseed (void) {
   unsigned int buff[BUFSEED];
   unsigned int res;
   unsigned int i;
-  time_t t = time(NULL);
+  time_t t = (time_t)&i;
   char *b = (char*)buff;
   addbuff(b, b);  /* local variable's address */
   addbuff(b, t);  /* time */
